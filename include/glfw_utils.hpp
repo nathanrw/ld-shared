@@ -14,6 +14,8 @@ public:
   ~GLFWToken();
   // Destructor. Decrement the instance count and terminate glfw if it
   // hits 0.
+private:
+  static int s_instance_count;
 };
 
 // A std::pair representing a 2D size.

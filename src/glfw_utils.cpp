@@ -1,25 +1,30 @@
 
-#include <iostream>
 #include <stdexcept>
 #include <GLFW/glfw3.h>
-#include <GL/gl.h>
-#include <string>
 #include <glfw_utils.hpp>
 
 
 //----- GLFWToken
 
 // Safely initialise and terminate glfw. Not thread safe.
-static int GLFWToken_instance_count = 0;
+int GLFWToken::s_instance_count = 0;
   
 GLFWToken::GLFWToken() { 
-  if (GLFWToken_instance_count == 0 && !glfwInit()) 
-    throw std::runtime_error("Failed to initialise glfw.");
-  ++GLFWToken_instance_count;
+  if (s_instance_count == 0) {
+    if (!glfwInit()) { 
+      throw std::runtime_error("Failed to initialise glfw.");
+    } else {
+      glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+      glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+      glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+      //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    }
+  }
+  ++s_instance_count;
 }
 
 GLFWToken::~GLFWToken() { 
-  if (--GLFWToken_instance_count == 0) glfwTerminate(); 
+  if (--s_instance_count == 0) glfwTerminate(); 
 }
 
 
