@@ -31,7 +31,7 @@ public:
 class GLFWWindow {
 public:
 
-  GLFWWindow(int width, int height, const char* title);
+  GLFWWindow(Size2D size, std::string title);
 
   void make_context_current();
 

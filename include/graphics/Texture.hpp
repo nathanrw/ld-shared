@@ -12,7 +12,9 @@
 #include <GL/glew.h>
 #include <string>
 
-#include <NonCopyable.hpp>
+#include <filesystem/Path.hpp>
+
+#include <graphics/GraphicsObject.hpp>
 
 namespace graphics {
   
@@ -42,7 +44,7 @@ namespace graphics {
    * Class for initialising and managing an OpenGL texture. Knows how to read
    * texture data from files.
    **/
-  class Texture : public NonCopyable {
+  class Texture : public GraphicsObject {
   public:
     
     /**
@@ -55,7 +57,11 @@ namespace graphics {
      * There are probably situations where feeding garbage to this function 
      * will just cause OpenGL to do something arbitrary - so don't.
      **/
-    Texture(TextureTarget bind_to, std::string filename);
+    Texture(
+      GraphicsToken& tok, 
+      TextureTarget bind_to, 
+      filesystem::Path filename
+    );
     
     /**
      * Bind this texture to the given texture object.

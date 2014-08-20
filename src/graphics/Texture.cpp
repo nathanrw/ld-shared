@@ -3,17 +3,25 @@
  **/
 
 #include <stdexcept>
-#include <stb_image.h>
+#include <stbimage/stb_image.h>
 
 #include <graphics/Texture.hpp>
 
+using namespace graphics;
+using namespace filesystem;
 
-graphics::Texture::Texture(TextureTarget bind_to, std::string filename) { 
+Texture::Texture(
+  GraphicsToken& tok, 
+  TextureTarget bind_to, 
+  Path filename
+) 
+  : GraphicsObject(tok)
+{ 
   glGenTextures(1, &m_id); 
   bind(bind_to);
 
   int x, y, n;
-  stbi_uc* data = stbi_load(filename.c_str(), &x, &y, &n, 4);
+  stbi_uc* data = stbi_load(filename.path().c_str(), &x, &y, &n, 4);
   if (data == 0) {
     glDeleteTextures(1, &m_id);
     throw std::runtime_error(stbi_failure_reason());
@@ -37,10 +45,14 @@ graphics::Texture::Texture(TextureTarget bind_to, std::string filename) {
 }
 
 
-void graphics::Texture::bind(TextureTarget to) { 
+void Texture::bind(TextureTarget to)
+{ 
   glBindTexture(get_gl_enum(to), m_id); 
 }
 
 
-graphics::Texture::~Texture() { glDeleteTextures(1, &m_id); }
+Texture::~Texture() 
+{ 
+  glDeleteTextures(1, &m_id);
+}
 

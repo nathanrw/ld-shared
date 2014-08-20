@@ -1,15 +1,6 @@
 /**
  * Classes for dealing with shader programs.
  *
- * E.g.
- *
- *   VertexShader vs(vertex_shader_source);
- *   FragmentShader fs(fragment_shader_source);
- *   ShaderProgram program;
- *   program.attach(vs);
- *   program.attach(fs);
- *   program.link();
- *
  **/
 
 #pragma once
@@ -17,7 +8,9 @@
 #include <GL/glew.h>
 #include <string>
 
-#include <NonCopyable.hpp>
+#include <graphics/GraphicsObject.hpp>
+
+#include <filesystem/Path.hpp>
 
 namespace graphics {
 
@@ -26,9 +19,9 @@ namespace graphics {
   /**
    * Class for initialising and managing an OpenGL shader program object.
    **/
-  class ShaderProgram : public NonCopyable {
+  class ShaderProgram : public GraphicsObject {
   public:
-    ShaderProgram();
+    explicit ShaderProgram(GraphicsToken& tok);
     void attach(const Shader& shader);
     bool link();
     void bind();
@@ -41,7 +34,7 @@ namespace graphics {
    * Base class for initialising and managing an OpenGL shader object. You don't
    * need to use this class directly - use VertexShader or FragmentShader.
    **/
-  class Shader : public NonCopyable {
+  class Shader : public GraphicsObject {
   public:
   
     // No public methods - see VertexShader and FragmentShader below.
@@ -55,7 +48,12 @@ namespace graphics {
      *
      * Throws std::runtime_error if compilation fails for whatever reason.
      **/
-    Shader(GLenum type, std::string source);
+    Shader(GraphicsToken& tok, GLenum type, std::string source);
+    
+    /**
+     * As above but taking a filename.
+     **/
+    Shader(GraphicsToken& tok, GLenum type, filesystem::Path filename);
   
     /**
      * Dtor. Destroys the underlying OpenGL object.
@@ -63,6 +61,7 @@ namespace graphics {
     virtual ~Shader();
   
   private:
+    void initialise(GLenum type, std::string source);
     bool invalid();
     std::string info_log();
     friend class ShaderProgram;
@@ -74,7 +73,8 @@ namespace graphics {
    **/
   class FragmentShader : public Shader {
   public:
-    FragmentShader(std::string source);
+    FragmentShader(GraphicsToken& tok, std::string source);
+    FragmentShader(GraphicsToken& tok, filesystem::Path path);
   };
   
   /**
@@ -82,7 +82,8 @@ namespace graphics {
    **/
   class VertexShader : public Shader {
   public:
-    VertexShader(std::string source);
+    VertexShader(GraphicsToken& tok, std::string source);
+    VertexShader(GraphicsToken& tok, filesystem::Path path);
   };
   
 }
