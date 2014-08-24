@@ -23,7 +23,8 @@ namespace graphics {
    * A type safe representation of an OpenGL buffer usage.
    */
   enum class BufferUsage {
-    STATIC_DRAW = GL_STATIC_DRAW
+    STATIC_DRAW = GL_STATIC_DRAW,
+    DYNAMIC_DRAW = GL_DYNAMIC_DRAW
   };
   inline GLenum get_gl_enum(BufferUsage u) { return static_cast<GLenum>(u); }
   
@@ -65,7 +66,7 @@ namespace graphics {
   class VertexBufferObject : public GraphicsObject {
   public:
     VertexBufferObject(
-      GraphicsToken& tok, 
+      GraphicsSystem& tok, 
       BufferTarget target, 
       BufferUsage usage
     );
@@ -96,7 +97,7 @@ namespace graphics {
    */
   class VertexArrayObject : public GraphicsObject {
   public:
-    explicit VertexArrayObject(GraphicsToken& tok);
+    explicit VertexArrayObject(GraphicsSystem& tok);
     void bind();
     void enable_attribute(AttributeIndex);
     void disable_attribute(AttributeIndex);

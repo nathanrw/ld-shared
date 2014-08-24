@@ -10,16 +10,19 @@
 
 using namespace graphics;
 using namespace filesystem;
+using namespace Eigen;
 
 //----- Shader
 
-Shader::Shader(GraphicsToken& tok, GLenum type, std::string source) 
+//*****************************************************************************
+Shader::Shader(GraphicsSystem& tok, GLenum type, std::string source) 
   : GraphicsObject(tok)
 {
   initialise(type, source);
 }
 
-Shader::Shader(GraphicsToken& tok, GLenum type, Path filename)
+//*****************************************************************************
+Shader::Shader(GraphicsSystem& tok, GLenum type, Path filename)
   : GraphicsObject(tok)
 {
   std::ifstream ifs(filename.path());
@@ -35,6 +38,7 @@ Shader::Shader(GraphicsToken& tok, GLenum type, Path filename)
   initialise(type, source);
 }
 
+//*****************************************************************************
 void Shader::initialise(GLenum type, std::string source)
 {
   std::cout << "Compiling shader source:" << std::endl
@@ -51,6 +55,7 @@ void Shader::initialise(GLenum type, std::string source)
   }
 }
 
+//*****************************************************************************
 bool Shader::invalid() 
 {
   GLint ok;
@@ -58,6 +63,7 @@ bool Shader::invalid()
   return !ok;
 }
 
+//*****************************************************************************
 std::string Shader::info_log() 
 {
   GLint max_length;
@@ -70,27 +76,32 @@ std::string Shader::info_log()
   return std::string(buf, actual_length);
 }
 
+//*****************************************************************************
 Shader::~Shader() 
 { 
   glDeleteShader(m_id); 
 }
 
-FragmentShader::FragmentShader(GraphicsToken& tok, std::string source) 
+//*****************************************************************************
+FragmentShader::FragmentShader(GraphicsSystem& tok, std::string source) 
   : Shader(tok, GL_FRAGMENT_SHADER, source) 
 {
 }
 
-FragmentShader::FragmentShader(GraphicsToken& tok, Path path)
+//*****************************************************************************
+FragmentShader::FragmentShader(GraphicsSystem& tok, Path path)
   : Shader(tok, GL_FRAGMENT_SHADER, path)
 {
 }
 
-VertexShader::VertexShader(GraphicsToken& tok, std::string source) 
+//*****************************************************************************
+VertexShader::VertexShader(GraphicsSystem& tok, std::string source) 
   : Shader(tok, GL_VERTEX_SHADER, source) 
 {
 }
 
-VertexShader::VertexShader(GraphicsToken& tok, Path path) 
+//*****************************************************************************
+VertexShader::VertexShader(GraphicsSystem& tok, Path path) 
   : Shader(tok, GL_VERTEX_SHADER, path) 
 {
 }
@@ -98,27 +109,64 @@ VertexShader::VertexShader(GraphicsToken& tok, Path path)
 
 //----- ShaderProgram
 
-ShaderProgram::ShaderProgram(GraphicsToken& tok) 
+//*****************************************************************************
+ShaderProgram::ShaderProgram(GraphicsSystem& tok) 
   : GraphicsObject(tok)
 { 
   m_id = glCreateProgram(); 
 }
 
+//*****************************************************************************
 void ShaderProgram::attach(const Shader& shader) 
 { 
   glAttachShader(m_id, shader.m_id); 
 }
 
+//*****************************************************************************
 bool ShaderProgram::link() 
 { 
   glLinkProgram(m_id); 
 }
 
+//*****************************************************************************
+void ShaderProgram::set_uniform(std::string name, float value)
+{
+  bind();
+  int location = glGetUniformLocation(m_id, name.c_str());
+  glUniform1f(location, value);
+}
+
+//*****************************************************************************
+void ShaderProgram::set_uniform(std::string name, Vector2f value)
+{
+  bind();
+  int location = glGetUniformLocation(m_id, name.c_str());
+  glUniform2f(location, value[0], value[1]);
+}
+
+//*****************************************************************************
+void ShaderProgram::set_uniform(std::string name, int value)
+{
+  bind();
+  int location = glGetUniformLocation(m_id, name.c_str());
+  glUniform1i(location, value);
+}
+
+//*****************************************************************************
+void ShaderProgram::set_uniform(std::string name, Vector2i value)
+{
+  bind();
+  int location = glGetUniformLocation(m_id, name.c_str());
+  glUniform2i(location, value[0], value[1]);
+}
+
+//*****************************************************************************
 void ShaderProgram::bind() 
 { 
   glUseProgram(m_id); 
 }
 
+//*****************************************************************************
 ShaderProgram::~ShaderProgram() 
 { 
   glDeleteProgram(m_id); 

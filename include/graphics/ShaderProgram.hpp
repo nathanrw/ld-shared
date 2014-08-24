@@ -12,6 +12,8 @@
 
 #include <filesystem/Path.hpp>
 
+#include <Eigen/Dense>
+
 namespace graphics {
 
   class Shader;
@@ -21,10 +23,16 @@ namespace graphics {
    **/
   class ShaderProgram : public GraphicsObject {
   public:
-    explicit ShaderProgram(GraphicsToken& tok);
+    explicit ShaderProgram(GraphicsSystem& tok);
     void attach(const Shader& shader);
     bool link();
     void bind();
+
+    void set_uniform(std::string name, float value);
+    void set_uniform(std::string name, Eigen::Vector2f value);
+    void set_uniform(std::string name, int value);
+    void set_uniform(std::string name, Eigen::Vector2i value);
+
     ~ShaderProgram();
   private:
     GLuint m_id;
@@ -48,12 +56,12 @@ namespace graphics {
      *
      * Throws std::runtime_error if compilation fails for whatever reason.
      **/
-    Shader(GraphicsToken& tok, GLenum type, std::string source);
+    Shader(GraphicsSystem& tok, GLenum type, std::string source);
     
     /**
      * As above but taking a filename.
      **/
-    Shader(GraphicsToken& tok, GLenum type, filesystem::Path filename);
+    Shader(GraphicsSystem& tok, GLenum type, filesystem::Path filename);
   
     /**
      * Dtor. Destroys the underlying OpenGL object.
@@ -73,8 +81,8 @@ namespace graphics {
    **/
   class FragmentShader : public Shader {
   public:
-    FragmentShader(GraphicsToken& tok, std::string source);
-    FragmentShader(GraphicsToken& tok, filesystem::Path path);
+    FragmentShader(GraphicsSystem& tok, std::string source);
+    FragmentShader(GraphicsSystem& tok, filesystem::Path path);
   };
   
   /**
@@ -82,8 +90,8 @@ namespace graphics {
    **/
   class VertexShader : public Shader {
   public:
-    VertexShader(GraphicsToken& tok, std::string source);
-    VertexShader(GraphicsToken& tok, filesystem::Path path);
+    VertexShader(GraphicsSystem& tok, std::string source);
+    VertexShader(GraphicsSystem& tok, filesystem::Path path);
   };
   
 }

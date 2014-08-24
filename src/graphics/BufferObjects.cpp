@@ -5,7 +5,7 @@
 using namespace graphics;
 
 VertexBufferObject::VertexBufferObject(
-  GraphicsToken& tok, 
+  GraphicsSystem& tok, 
   BufferTarget target, 
   BufferUsage usage
 )
@@ -42,7 +42,7 @@ VertexBufferObject::~VertexBufferObject()
   glDeleteBuffers(1, &m_id);
 }
 
-VertexArrayObject::VertexArrayObject(GraphicsToken& tok)
+VertexArrayObject::VertexArrayObject(GraphicsSystem& tok)
   : GraphicsObject(tok)
 {
   glGenVertexArrays(1, &m_id);

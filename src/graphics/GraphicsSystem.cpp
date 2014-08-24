@@ -7,13 +7,16 @@
 #include <graphics/GraphicsSystem.hpp>
 
 using namespace graphics;
+using namespace Eigen;
 
+//*****************************************************************************
 static void glfw_error_callback(int error, const char* description)
 {
   std::cout << "GLFW Error " << error << ": " << description << std::endl;
 }
 
-GraphicsSystem::GraphicsSystem(Size2D window_size, std::string window_name)
+//*****************************************************************************
+GraphicsSystem::GraphicsSystem(Vector2i window_size, std::string window_name)
 {
   glfwSetErrorCallback(glfw_error_callback);
   
@@ -29,30 +32,25 @@ GraphicsSystem::GraphicsSystem(Size2D window_size, std::string window_name)
   std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
   std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
 
-  Size2D size = m_window->framebuffer_size();
-  glViewport(0, 0, size.width(), size.height());
+  Vector2i size = m_window->framebuffer_size();
+  glViewport(0, 0, size[0], size[1]);
 }
 
+//*****************************************************************************
+Vector2i GraphicsSystem::window_size() const
+{
+  return m_window->framebuffer_size();
+}
+
+//*****************************************************************************
 GLFWWindow& GraphicsSystem::window()
 {
   return *m_window;
 }
 
-GraphicsToken& GraphicsSystem::token()
-{
-  return m_graphics_token;
-}
-
+//*****************************************************************************
 GraphicsSystem::~GraphicsSystem()
 {
   delete m_window;
   delete m_glfw_token;
-}
-
-GraphicsToken::GraphicsToken()
-{
-}
-
-GraphicsToken::~GraphicsToken()
-{
 }

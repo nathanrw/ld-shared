@@ -41,6 +41,8 @@ add_executable(wibble
   src/graphics/BufferObjects.cpp include/graphics/BufferObjects.hpp
   src/graphics/GraphicsSystem.cpp include/graphics/GraphicsSystem.hpp
   src/graphics/GraphicsObject.cpp include/graphics/GraphicsObject.hpp
+  src/graphics/Sprite.cpp include/graphics/Sprite.hpp
+  src/game/ConnectFour.cpp include/game/ConnectFour.hpp
 )
 
 # GLFW dependency. This assumes the GLFW source tree has been checked

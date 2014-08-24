@@ -2,7 +2,20 @@
 
 using namespace graphics;
 
-GraphicsObject::GraphicsObject(GraphicsToken& tok)
-  : m_token(tok)
+//*****************************************************************************
+GraphicsObject::GraphicsObject(GraphicsSystem& system)
+  : m_system(system)
 {
+}
+
+//*****************************************************************************
+GraphicsSystem& GraphicsObject::graphics_system()
+{
+  return m_system;
+}
+
+//*****************************************************************************
+const GraphicsSystem& GraphicsObject::graphics_system() const
+{
+  return m_system;
 }

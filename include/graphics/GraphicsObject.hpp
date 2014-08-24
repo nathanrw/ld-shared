@@ -12,14 +12,16 @@
 #include <utils/NonCopyable.hpp>
 
 namespace graphics {
-
-  class GraphicsToken;
+  
+  class GraphicsSystem;
 
   class GraphicsObject : public NonCopyable {
   protected:
-    explicit GraphicsObject(GraphicsToken& token);
+    explicit GraphicsObject(GraphicsSystem& system);
+    GraphicsSystem& graphics_system();
+    const GraphicsSystem& graphics_system() const;
   private:
-    GraphicsToken& m_token; 
+    GraphicsSystem& m_system; 
   };
 
 }
