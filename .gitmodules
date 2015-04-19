@@ -1,0 +1,12 @@
+[submodule "submodules/glfw"]
+	path = submodules/glfw
+	url = https://github.com/glfw/glfw
+[submodule "submodules/eigen3"]
+	path = submodules/eigen3
+	url = https://github.com/OPM/eigen3
+[submodule "submodules/glew-cmake"]
+	path = submodules/glew-cmake
+	url = https://github.com/Perlmint/glew-cmake
+[submodule "submodules/stb"]
+	path = submodules/stb
+	url = https://github.com/nothings/stb
